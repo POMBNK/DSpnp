@@ -1,0 +1,64 @@
+Я использую плату управления ArduinoMega2560 и прошивку MarlinForRAMPS.
+Иснтуркция по настройке и программированию платы управления:
+1. Скачиваем и устанавливаем ArduinoIDE
+2. Скачиваем и устанавливаем драйвер для CH340
+3. Скачиваем прошивку Marlin адаптированную под OpenPNP с github (https://github.com/mgrl/MarlinOnRamps4OpenPnP)
+4. Скачиваем библиотеку u8glibs.zip для дисплея
+5. Устанавливаем бибилиотеку в ArduinoIDE: Скетч->Подключить библиотеку->Добавить zip-библиотерку
+6. Открываем прошивку Файл->Открыть и в распакованной папке с прошивкой находим вкладку Marlin, а в ней файл Marlin.ino. 
+   Во вкладке ИНСТРУМЕНТЫ выбираем:
+      Плата->Arduino AVR boards->Arduino Mega or Mega 2560
+      Процессор->Atmega2560
+      Порт-> последовательный порт к которому подключена плата
+7. Для удобства поиска необходимых настроек включим показ номеров строк. "Файл->Настройки" и выбираем "Показать номера строк"
+8. Открываем вкладку Configuration.h и нас интересуют строки:
+   114 #define BAUDRATE 250000                      	// скорость работы через COM-порт
+
+   127 #define CUSTOM_MACHINE_NAME "OpenPnP"        	// название устройства
+
+   137 #define EXTRUDERS 1				// количество держателей сопел
+
+   287 #define TEMP_SENSOR_1 0				// ставим 0, так как у нас один держатель сопел
+
+   469 #define USE_XMIN_PLUG				// раскомментируем какие концевики у нас задейстованы
+   470 //#define USE_YMIN_PLUG
+   471 //#define USE_ZMIN_PLUG
+   472 //#define USE_XMAX_PLUG
+   473 #define USE_YMAX_PLUG
+   474 #define USE_ZMAX_PLUG
+
+   528 #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 80, 8.8888 }		// количество шагов на 1 мм движения оси (для оси E(вращение детали) количество шагов на 1 градус)
+
+   535 #define DEFAULT_MAX_FEEDRATE          { 10000, 10000, 10000, 10000 }  	// максимальная скорость подачи
+
+   543 #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 1000, 1000 }		// максимальные ускорения по осям 
+
+   584 //#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN				// комментируем 
+
+   605 #define Z_MIN_PROBE_ENDSTOP						// раскомментируем
+
+   745 #define INVERT_X_DIR false						// если необходимо, то инвертируем работу двигателей
+   746 #define INVERT_Y_DIR false
+   747 #define INVERT_Z_DIR true						// в моём случае получилось что мотор оси Z вращался в другую сторону и я его программно инвертировал
+
+   770 #define X_HOME_DIR -1							// устанавливаем в какую сторону будет парковка по осям
+   771 #define Y_HOME_DIR 1
+   772 #define Z_HOME_DIR 1
+
+   777 #define X_BED_SIZE 160							// устанавливаем лимиты по осям чтобы из основной программы с ПК не было возможности уехать за пределы
+   777 #define Y_BED_SIZE 310
+
+   781 #define X_MIN_POS 0
+   782 #define Y_MIN_POS 0
+   783 #define Z_MIN_POS -56							// у меня для Z получился лимит -56мм
+   784 #define X_MAX_POS X_BED_SIZE
+   785 #define Y_MAX_POS Y_BED_SIZE
+   786 #define Z_MAX_POS 0
+
+  1206 #define LCD_LANGUAGE ru						 	// ставим русский язык на дисплее
+
+  1230 #define DISPLAY_CHARSET_HD44780 JAPANESE					// выбираем какой дисплей подключен
+
+9. Прошиваем плату управления нажав на стрелочку ЗАГРУЗКА. Проверяем в программе Pronterface. При необходимости корректируем параметры ещё раз и перепрограммируем плату.
+
+Все материалы есть на яндекс.диске по адресу https://disk.yandex.ru/d/en5C42LWxn2s3A
